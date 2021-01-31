@@ -30,9 +30,9 @@ easing_t easing_data_parser::operator()(std::string const& definition_str) const
     split();
    
     // const aliasing the group datas in line
-    const std::string& first_group = definition_list.at(index::T0);
-    const std::string& second_group = definition_list.at(index::TMAX);
-    const std::string& duratin_group = definition_list.at(index::DURATION);
+    const std::string& first_group = definition_list.at(T0);
+    const std::string& second_group = definition_list.at(TMAX);
+    const std::string& duratin_group = definition_list.at(DURATION);
 
     // initializing of esing data from definition string
     easing_input_data result {

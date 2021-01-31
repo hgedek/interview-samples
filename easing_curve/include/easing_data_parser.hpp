@@ -20,7 +20,7 @@ struct data_parser {
 
    // enum anonymous constants re well used as readable indexs
    // instead of using 0,1,2 ... on datas using enum :: Value's re always better 
-    enum index {
+    enum {
         T0 = 1,
         TMAX,
         DURATION
