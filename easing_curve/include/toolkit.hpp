@@ -5,6 +5,15 @@
 #include <unordered_map>
 #include <fstream>
 
+#ifdef WINDOWS
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
+
 
 // helper classes/structs re used to solve non related problems like convertions etc...
 // they re stateless
@@ -21,7 +30,14 @@ struct file_system {
 
 // place of many static helper methods like convertion, error checkings etc...
 struct toolkit {
-     static bool is_floating_number(std::string const& value) {
+     static std::string get_input_path() {
+        char buff[FILENAME_MAX];
+        GetCurrentDir( buff, FILENAME_MAX );
+    
+        return std::string(buff) + "/../input";
+    }
+    
+    static bool is_floating_number(std::string const& value) {
         try {
             (void)std::stof(value);
             return true; 
@@ -52,7 +68,7 @@ struct toolkit {
             {"out_quad", easing_type::out_quad},
             {"in_out_quad", easing_type::in_out_quad},
         };
-
+        
         auto itr = types.find(toolkit::to_lower(str));
         return  itr == types.end() ? easing_type::none : itr->second;
     }

@@ -18,19 +18,29 @@ easing_list_t easing_file_parser_impl::parse(std::string const& file_name) const
 
     easing_list_t curve_list;
     
+    easing_type_checker type_checker{}; 
     easing_data_parser parser{};
+   
+    bool skip_times = true;
 
     while (std::getline(in, line)) {
-        try {
-            if (line.empty())
-                continue;
-            else if (toolkit::str_to_easing_type(line) != easing_type::none)
-                curve_list.emplace_back(parser(line));
-            else if (toolkit::is_floating_number(line)) 
-                curve_list.back().time_list.push_back(std::stof(line));
-        } catch(std::exception& e) {
-            std::cerr << e.what() << std::endl;
+        if (line.empty()) {
+            skip_times = true;
         }
+        else if ( type_checker(line) != easing_type::none){ 
+            try {
+                curve_list.emplace_back(parser(line));
+                skip_times = false;
+             } catch(...) {
+                skip_times = true;
+            }
+        }
+        else if (toolkit::is_floating_number(line) && !skip_times)
+        {
+            try {
+                curve_list.back().time_list.push_back(std::stof(line));
+            } catch(...){}
+        } 
     }
 
     return std::move(curve_list);
@@ -39,6 +49,10 @@ easing_list_t easing_file_parser_impl::parse(std::string const& file_name) const
 easing_file_parser::easing_file_parser()
     : impl(new easing_file_parser_impl())
 {}
+
+void easing_file_parser::impl_deleter::operator()(easing_file_parser_impl* obj) {
+    delete obj;
+}
 
 easing_list_t easing_file_parser::parse(std::string const& file_name) const{
 

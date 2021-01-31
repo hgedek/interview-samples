@@ -2,10 +2,12 @@
 #include "toolkit.hpp"
 #include <string>
 
-
 TEST_CASE("file exists") {
-    const std::string file_name ="/Users/hakan/Workspace/interview-samples/easing_curve/input.txt";
-    decltype(file_name) non_exist = "/Users/hakan/Workspace/interview-samples/easing_curve/input.txt_";
+
+    const std::string file_name = toolkit::get_input_path() + "/empty.txt";
+    decltype(file_name) non_exist = toolkit::get_input_path() + "/input.txt_";
+
+    std::cout << file_name << std::endl;
 
     REQUIRE(file_system::exists(file_name) == true);
     REQUIRE(file_system::exists(non_exist) == false); 
@@ -77,5 +79,4 @@ TEST_CASE("type extracting from string")
     REQUIRE(tc(lines[6]) == easing_type::none);
     REQUIRE(tc(lines[7]) == easing_type::none);
 }
-
 

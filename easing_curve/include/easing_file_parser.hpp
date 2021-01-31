@@ -20,6 +20,10 @@ public:
 
 #endif 
 
-    std::unique_ptr<easing_file_parser_impl> impl;
+    struct impl_deleter {
+        void operator()(easing_file_parser_impl* obj);
+    };
+
+    std::unique_ptr<easing_file_parser_impl,impl_deleter> impl;
 };
 

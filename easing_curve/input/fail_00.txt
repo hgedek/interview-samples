@@ -1,0 +1,17 @@
+Linear,x_t0=100,duration=1
+0.2
+0.5
+1.0
+
+Linear,x_t0=100,x_tmax=200,duration=1
+0.2
+0.5
+1.0
+
+
+x_t0=100,x_tmax=200,duration=1
+0.2
+
+
+Linear,x_tmax=200,duration=1
+0.2

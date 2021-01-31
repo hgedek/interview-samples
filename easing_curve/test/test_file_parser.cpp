@@ -1,92 +1,109 @@
-#include "../include/catch.hpp"
-#include "../include/toolkit.hpp"
+#include "catch.hpp"
+#include "toolkit.hpp"
+#include "easing_file_parser.hpp"
 
-TEST_CASE("File exists ?") 
+TEST_CASE("file not exists")
 {
-    REQUIRE(file_system::exists("../input_.txt") == false);
-    REQUIRE(file_system::exists("../input.txt") == true);
+    std::string path = toolkit::get_input_path() + "/not_exist.txt";
+
+    REQUIRE_THROWS_AS(easing_file_parser{}.parse(path), std::runtime_error);
 }
-/*
-TEST_CASE("Wrong number arguments")
+
+#if 0
+TEST_CASE("empty file") 
 {
-    std::vector<std::string> lines;
-   
-    SECTION("definition string missing")
-    {
-        lines.emplace_back("x_t0=100,x_tmax=200,duration=1");
-        lines.emplace_back("0.2");
-        lines.emplace_back("0.5");
-        lines.emplace_back("1.0");
+    std::string path = toolkit::get_input_path() + "/empty.txt";
 
-        REQUIRE_THROWS(easing_file_parser{}.parse(lines));
-    } 
-
-    SECTION("Linear") {
-        SECTION("x_t0 missing")
-        {
-            lines.emplace_back("Linear,x_tmax=200,duration=1");
-            REQUIRE_THROWS(easing_file_parser{}.parse(lines));
-        }
-        SECTION("x_tmax missing")
-        {
-            lines.emplace_back("Linear,x_t0=100,duration=1");
-            REQUIRE_THROWS(easing_file_parser{}.parse(lines));
-        }
-        SECTION("duration missing")
-        {
-            lines.emplace_back("Linear,x_t0=100,x_tmax=200");
-            REQUIRE_THROWS(easing_file_parser{}.parse(lines));
-        }
-    }
+    const auto easing_list = easing_file_parser{}.parse(path);
+    REQUIRE(easing_list.empty());
 }
+#endif
 
-TEST_CASE("Empty time list") {
-
-    std::vector<std::string> lines;
-
-    lines.emplace_back("Linear,x_t0=100,x_tmax=200,duration=1");
-
-    REQUIRE_THROWS_AS(easing_file_parser{}.parse(lines),std::runtime_error);
-}
-
-TEST_CASE("Parsing successfull") {
-
-    std::vector<std::string> lines;
-
-    lines.emplace_back("Linear,x_t0=100,x_tmax=200,duration=1");
-    lines.emplace_back("0.2");
-    lines.emplace_back("0.5");
-    lines.emplace_back("1.0");
-
-
-    auto base_ptr = easing_file_parser{}.parse(lines);
-    auto linear_ptr = static_cast<linear_easing_data*>(base_ptr.get()); 
-
-    REQUIRE(linear_ptr->type() == easing_type::linear);
-    REQUIRE(linear_ptr->definition.x_t0 == 100);
-    REQUIRE(linear_ptr->definition.x_tmax == 200);
-    REQUIRE(linear_ptr->definition.duration == 1);
-    REQUIRE(linear_ptr->time_list.size() == 3);
-    REQUIRE(linear_ptr->time_list[0] == 0.2f);
-    REQUIRE(linear_ptr->time_list[1] == 0.5f);
-    REQUIRE(linear_ptr->time_list[2] == 1.0f);
-}
-
-TEST_CASE("File parsing")
+TEST_CASE("one curve file")
 {
-    std::string_view file_name = "/Users/hakan/Workspace/interview-samples/easing_curve/input.txt";
+    std::string path = toolkit::get_input_path() + "/one_curve.txt";
+    
+    const auto easing_list = easing_file_parser{}.parse(path);
 
-    auto base_ptr = easing_file_parser{file_name}.parse();
-    auto linear_ptr = static_cast<linear_easing_data*>(base_ptr.get()); 
+    REQUIRE(easing_list.size() == 1);
 
-    REQUIRE(linear_ptr->type() == easing_type::linear);
-    REQUIRE(linear_ptr->definition.x_t0 == 100);
-    REQUIRE(linear_ptr->definition.x_tmax == 200);
-    REQUIRE(linear_ptr->definition.duration == 1);
-    REQUIRE(linear_ptr->time_list.size() == 3);
-    REQUIRE(linear_ptr->time_list[0] == 0.2f);
-    REQUIRE(linear_ptr->time_list[1] == 0.5f);
-    REQUIRE(linear_ptr->time_list[2] == 1.0f);
-}
+    /*
 
+Linear,x_t0=100,x_tmax=200,duration=1
+0.2
+0.5
+1.0
 */
+    const auto& obj = easing_list.front();
+
+    REQUIRE(obj.type == easing_type::linear);
+    REQUIRE(obj.definition.x_t0 == 100);
+    REQUIRE(obj.definition.x_tmax == 200);
+    REQUIRE(obj.definition.duration == 1);
+    
+    REQUIRE(obj.time_list.size() == 3);
+    REQUIRE(obj.time_list.front() == 0.2f);
+    REQUIRE(obj.time_list.back() == 1.0f);
+
+}
+
+TEST_CASE("two curves file")
+{
+    std::string path = toolkit::get_input_path() + "/two_curves.txt";
+
+    const auto easing_list = easing_file_parser{}.parse(path);
+
+    REQUIRE(easing_list.size() == 2);
+
+    const auto& obj = easing_list.front();
+    const auto& obj1 = easing_list.back();
+
+    REQUIRE(obj.type == easing_type::linear);
+    REQUIRE(obj.definition.x_t0 == 100);
+    REQUIRE(obj.definition.x_tmax == 200);
+    REQUIRE(obj.definition.duration == 1);
+    
+    REQUIRE(obj.time_list.size() == 3);
+    REQUIRE(obj.time_list.front() == 0.2f);
+    REQUIRE(obj.time_list.back() == 1.0f);
+
+    REQUIRE(obj1.type == easing_type::linear);
+    REQUIRE(obj1.definition.x_t0 == 100);
+    REQUIRE(obj1.definition.x_tmax == 200);
+    REQUIRE(obj1.definition.duration == 1);
+    
+    REQUIRE(obj1.time_list.size() == 3);
+    REQUIRE(obj1.time_list.front() == 0.2f);
+    REQUIRE(obj1.time_list.back() == 1.0f);
+}
+
+TEST_CASE("multiple curves files")
+{
+    std::string path = toolkit::get_input_path() + "/multiple_curves.txt";
+
+    const auto easing_list = easing_file_parser{}.parse(path);
+
+    REQUIRE(easing_list.size() == 4);
+}
+
+TEST_CASE("fail00.txt = one curve exists")
+{
+    std::string path = toolkit::get_input_path() + "/fail_00.txt";
+
+    const auto easing_list = easing_file_parser{}.parse(path);
+
+    REQUIRE(easing_list.size() == 1);
+
+    const auto& obj = easing_list.front();
+
+    REQUIRE(obj.type == easing_type::linear);
+    REQUIRE(obj.definition.x_t0 == 100);
+    REQUIRE(obj.definition.x_tmax == 200);
+    REQUIRE(obj.definition.duration == 1);
+    
+    REQUIRE(obj.time_list.size() == 3);
+    REQUIRE(obj.time_list.front() == 0.2f);
+    REQUIRE(obj.time_list.back() == 1.0f);
+}
+
+
