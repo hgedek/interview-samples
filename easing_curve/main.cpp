@@ -1,5 +1,5 @@
 #include <iostream>
-#include "file_parser.hpp"
+#include "easing_file_parser.hpp"
 
 constexpr auto PARAM_COUNT = 2;
 
@@ -10,6 +10,7 @@ int main(int argc, char **argv) {
         return -1; 
     }
     
-    
+    (void)easing_file_parser{}.parse(argv[1]);    
+     
     return 0;
 }

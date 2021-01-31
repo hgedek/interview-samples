@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <iostream>
+#include <type_traits>
 
 enum class easing_type {
     linear,
@@ -28,10 +29,9 @@ struct easing_data {
     easing_type type;
 };
 
-struct easing_input_data final: easing_data {
+struct easing_input_data final: easing_data { 
+    
     easing_input_data() = default;
-
-    virtual~ easing_input_data() = default;
 
     explicit easing_input_data(easing_type type): easing_data(type) {} 
 
