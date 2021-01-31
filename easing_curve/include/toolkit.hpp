@@ -31,11 +31,14 @@ struct toolkit {
     }
 
     static void to_lower(std::string& str) {
+        if (str.empty()) return;
         std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     }
 
     static std::string to_lower(std::string const& str) {
         std::string result;
+        if (str.empty()) return result;        
+
         result.resize(str.size());
         
         std::transform(str.begin(), str.end(), result.begin(), ::tolower);
