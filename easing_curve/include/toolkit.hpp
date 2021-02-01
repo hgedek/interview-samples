@@ -30,11 +30,14 @@ struct file_system {
 
 // place of many static helper methods like convertion, error checkings etc...
 struct toolkit {
-     static std::string get_input_path() {
+     static std::string absolute_path(std::string const& filename) {
         char buff[FILENAME_MAX];
         GetCurrentDir( buff, FILENAME_MAX );
-    
-        return std::string(buff) + "/../input";
+#if defined(TESTING)
+        return std::string(buff) + "/../input/" + filename;
+#else
+        return std::string(buff) + "/input/" + filename;
+#endif
     }
     
     static bool is_floating_number(std::string const& value) {

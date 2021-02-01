@@ -1,11 +1,12 @@
 #include "catch.hpp"
 #include "toolkit.hpp"
 #include <string>
+#include <iostream>
 
 TEST_CASE("file exists") {
 
-    const std::string file_name = toolkit::get_input_path() + "/empty.txt";
-    decltype(file_name) non_exist = toolkit::get_input_path() + "/input.txt_";
+    const std::string file_name = toolkit::absolute_path("empty.txt");
+    decltype(file_name) non_exist = toolkit::absolute_path("input.txt_");
 
     REQUIRE(file_system::exists(file_name) == true);
     REQUIRE(file_system::exists(non_exist) == false); 

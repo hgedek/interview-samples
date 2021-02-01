@@ -13,12 +13,6 @@ public:
     easing_file_parser& operator=(easing_file_parser&&) = delete;
 
     easing_list_t parse(std::string const&) const;
-    
-#ifdef TESTIING
-    
-    easing_list_t parse(std::vector<std::string> const&) const;
-
-#endif 
 
     struct impl_deleter {
         void operator()(easing_file_parser_impl* obj);

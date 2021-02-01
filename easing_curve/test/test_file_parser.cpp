@@ -3,18 +3,19 @@
 
 TEST_CASE("file not exists")
 {
-    REQUIRE_THROWS_AS(easing_file_parser{}.parse("not_exist.txt"), std::runtime_error);
+    REQUIRE_THROWS_AS(easing_file_parser{}.parse(toolkit::absolute_path("not_exist.txt")),
+            std::runtime_error);
 }
 
 TEST_CASE("empty file") 
 {
-    const auto easing_list = easing_file_parser{}.parse("empty.txt");
+    const auto easing_list = easing_file_parser{}.parse(toolkit::absolute_path("empty.txt"));
     REQUIRE(easing_list.empty());
 }
 
 TEST_CASE("one curve file")
 {
-    const auto easing_list = easing_file_parser{}.parse("one_curve.txt");
+    const auto easing_list = easing_file_parser{}.parse(toolkit::absolute_path("one_curve.txt"));
 
     REQUIRE(easing_list.size() == 1);
 
@@ -40,7 +41,7 @@ Linear,x_t0=100,x_tmax=200,duration=1
 
 TEST_CASE("two curves file")
 {
-    const auto easing_list = easing_file_parser{}.parse("two_curves.txt");
+    const auto easing_list = easing_file_parser{}.parse(toolkit::absolute_path("two_curves.txt"));
 
     REQUIRE(easing_list.size() == 2);
 
@@ -68,14 +69,14 @@ TEST_CASE("two curves file")
 
 TEST_CASE("multiple curves files")
 {
-    const auto easing_list = easing_file_parser{}.parse("multiple_curves.txt");
+    const auto easing_list = easing_file_parser{}.parse(toolkit::absolute_path("multiple_curves.txt"));
 
     REQUIRE(easing_list.size() == 4);
 }
 
 TEST_CASE("fail00.txt = one curve exists")
 {
-    const auto easing_list = easing_file_parser{}.parse("fail_00.txt");
+    const auto easing_list = easing_file_parser{}.parse(toolkit::absolute_path("fail_00.txt"));
 
     REQUIRE(easing_list.size() == 1);
 

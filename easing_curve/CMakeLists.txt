@@ -4,6 +4,12 @@ cmake_minimum_required(VERSION 3.10)
 
 project(${exercise} CXX)
 
+option(TESTING "testmode" OFF)
+
+if (TESTING)
+    add_definitions(-DTESTING)
+endif()
+
 set(CMAKE_BUILD_TYPE Debug)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
