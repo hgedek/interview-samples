@@ -18,7 +18,7 @@ if (TESTING)
     add_executable(${exercise}_test ${TEST_SOURCES} ${SOURCES})
     set(executable ${exercise}_test)
 else() 
-    add_executable(${exercise} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp ${SOURCES})
+    add_executable(${exercise} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${SOURCES})
     set(executable ${exercise})
 endif()
 
