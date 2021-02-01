@@ -20,14 +20,20 @@ easing_list_t easing_file_parser_impl::parse(std::string const& file_name) const
     
     easing_type_checker type_checker{}; 
     easing_data_parser parser{};
-   
+  
+    // flag that is used to skip wrong definitions
+    // if definition is wrong but it has time list we will skip time list  
     bool skip_times = true;
 
+    // read till to a new line that has a new definition
+    // skip empty lines
+    // if eof => leave
     while (std::getline(in, line)) {
         if (line.empty()) 
             skip_times = true;
         else if (type_checker(line) != easing_type::none){ 
             try {
+                // if parsing crashes ... but not eof => goes on
                 curve_list.emplace_back(parser(line));
                 skip_times = false;
              } catch(...) {
@@ -36,6 +42,7 @@ easing_list_t easing_file_parser_impl::parse(std::string const& file_name) const
         }
         else if (toolkit::is_floating_number(line) && !skip_times)
         {
+            // if float number is somehow wrong ... dont stop here
             try {
                 curve_list.back().time_list.push_back(std::stof(line));
             } catch(...){}

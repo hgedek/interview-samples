@@ -80,6 +80,10 @@ struct in_out_quad_generator: easing_curve_generator {
     }
 };
 
+
+// easing object creator
+// each object designed as a functor
+// extending this is easy
 struct generator_creator {
     generator_t operator()(easing_type type) const {
         switch (type) {
@@ -96,6 +100,7 @@ struct generator_creator {
     }
 };
 
+// manager will keep has_map of [type, creator] so recreating wont be necessary
 generator_manager::generator_manager() {
     generator_creator creator; 
    

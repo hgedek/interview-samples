@@ -51,3 +51,6 @@ Linear,x_t0=100,x_tmax=200,duration=1
 
 ```
 
+for all other equations too. So if definition line is different than this example , it will not work
+
+
