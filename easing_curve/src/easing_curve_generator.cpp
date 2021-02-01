@@ -1,54 +1,51 @@
 #include "easing_curve_generator.hpp"
 
-
-struct linear_generator {
-    void operator()(easing_t const&){}
+struct linear_generator: easing_curve_generator {
+    void operator()(easing_t const&) const override {}
 };
 
-struct in_quad_generator {
-    void operator()(easing_t const&) {}
+struct in_quad_generator: easing_curve_generator {
+    void operator()(easing_t const&) const override {}
 };
 
-struct out_quad_generator {
-    void operator()(easing_t const&) {}
+struct out_quad_generator: easing_curve_generator {
+    void operator()(easing_t const&) const override {}
 };
 
-struct in_out_quad_generator {
-    void operator()(easing_t const&) {}
+struct in_out_quad_generator: easing_curve_generator {
+    void operator()(easing_t const&) const override {}
 };
 
-class easing_curve_generator_impl {
-public:
-    easing_curve_generator_impl(); 
-    
-    void operator()(easing_list_t const& vl);
-
-private:
-    using generator_func_t = std::function<void(easing_t const&)>;
-    std::unordered_map<easing_type, generator_func_t> generators;
-};
-
-easing_curve_generator_impl::easing_curve_generator_impl(){
-    generators.insert({
-        {easing_type::linear, linear_generator{}},
-        {easing_type::in_quad, in_quad_generator{}},
-        {easing_type::out_quad, out_quad_generator{}},
-        {easing_type::in_out_quad, in_out_quad_generator{}} 
-    });
-}
-
-void easing_curve_generator_impl::operator()(easing_list_t const& vl) {
-    for (const auto& item : vl) {
-        auto generator = generators.find(item.type);
-        if (generator != generators.end())
-           (generator->second)(item);
+struct generator_creator {
+    generator_t operator()(easing_type type) const {
+        switch (type) {
+            case easing_type::linear:
+                return std::make_shared<linear_generator>();
+            case easing_type::in_quad:
+                return std::make_shared<in_quad_generator>();
+            case easing_type::out_quad:
+                return std::make_shared<out_quad_generator>();
+            case easing_type::in_out_quad:
+            default:
+                return std::make_shared<in_out_quad_generator>();
+        }
     }
+};
+
+generator_manager::generator_manager() {
+    generator_creator creator; 
+   
+    // one time initialization 
+    generators.emplace(easing_type::linear, creator(easing_type::linear));
+    generators.emplace(easing_type::in_quad, creator(easing_type::in_quad));
+    generators.emplace(easing_type::out_quad, creator(easing_type::out_quad));
+    generators.emplace(easing_type::in_out_quad, creator(easing_type::in_out_quad));
 }
 
-easing_curve_generator::easing_curve_generator()
-    : impl(new easing_curve_generator_impl()){
+generator_t generator_manager::operator[](easing_type type) {
+    return generators[type];
 }
 
-void easing_curve_generator::operator()(easing_list_t const& vl) {
-    impl->operator()(vl);
+const generator_t generator_manager::operator[](easing_type type) const {
+    return generators[type];
 }
