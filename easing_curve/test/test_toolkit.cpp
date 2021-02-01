@@ -49,9 +49,9 @@ TEST_CASE("str to easing type")
     REQUIRE(toolkit::str_to_easing_type("LiNeAr") == easing_type::linear);
     REQUIRE(toolkit::str_to_easing_type("") == easing_type::none);
     REQUIRE(toolkit::str_to_easing_type("fdsfdsa") == easing_type::none);
-    REQUIRE(toolkit::str_to_easing_type("in_quad") == easing_type::in_quad);
-    REQUIRE(toolkit::str_to_easing_type("out_quad") == easing_type::out_quad);
-    REQUIRE(toolkit::str_to_easing_type("in_out_quad") == easing_type::in_out_quad);
+    REQUIRE(toolkit::str_to_easing_type("inquad") == easing_type::in_quad);
+    REQUIRE(toolkit::str_to_easing_type("outquad") == easing_type::out_quad);
+    REQUIRE(toolkit::str_to_easing_type("inoutquad") == easing_type::in_out_quad);
 }
 
 TEST_CASE("easing type to str")
@@ -67,9 +67,9 @@ TEST_CASE("type extracting from string")
     std::vector<std::string> lines {
         "Linear,fdsf",
         "linear,dsafds",
-        "in_out_quad,fdafdsf",
-        "in_quad,fdffds",
-        "out_quad,dfdsafs",
+        "inoutquad,fdafdsf",
+        "inquad,fdffds",
+        "outquad,dfdsafs",
         "lin,fdsfds",
         "",
         "fdsafds,fdsafds"

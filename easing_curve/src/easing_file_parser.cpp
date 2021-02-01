@@ -24,10 +24,9 @@ easing_list_t easing_file_parser_impl::parse(std::string const& file_name) const
     bool skip_times = true;
 
     while (std::getline(in, line)) {
-        if (line.empty()) {
+        if (line.empty()) 
             skip_times = true;
-        }
-        else if ( type_checker(line) != easing_type::none){ 
+        else if (type_checker(line) != easing_type::none){ 
             try {
                 curve_list.emplace_back(parser(line));
                 skip_times = false;

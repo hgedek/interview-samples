@@ -68,9 +68,9 @@ struct toolkit {
         
         static std::unordered_map<std::string, easing_type> hash_map = {
             {"linear", easing_type::linear},
-            {"in_quad", easing_type::in_quad},
-            {"out_quad", easing_type::out_quad},
-            {"in_out_quad", easing_type::in_out_quad},
+            {"inquad", easing_type::in_quad},
+            {"outquad", easing_type::out_quad},
+            {"inoutquad", easing_type::in_out_quad},
         };
         
         auto itr = hash_map.find(toolkit::to_lower(str));
@@ -97,11 +97,9 @@ struct toolkit {
 // - we need to check first type string
 struct easing_type_checker {
     easing_type operator()(std::string const& line) {
-        const auto MIN_LENGTH = 5;
-
-        if (line.empty() || line.length() < MIN_LENGTH)
+        if (line.empty())
             return easing_type::none;
-
+        
         auto pos = line.find_first_of(',');
         if (pos == std::string::npos) 
             return easing_type::none;

@@ -13,7 +13,7 @@ struct linear_generator: easing_curve_generator {
        // f(t) = x_t0 + t * (x_tmax - t_t0)/d;
         auto f = [&obj](auto t) {
             return obj.definition.x_t0 + t * 
-                ( obj.definition.x_tmax - obj.definition.x_t0)/obj.definition.duration; 
+                float(obj.definition.x_tmax - obj.definition.x_t0)/obj.definition.duration; 
         };
         
         FILL_AND_RETURN_RESULTS;
@@ -30,7 +30,7 @@ struct in_quad_generator: easing_curve_generator {
         auto f = [&obj](auto t) {
             t /= obj.definition.duration;
             
-            return t * t * (obj.definition.x_tmax-obj.definition.x_t0) + 
+            return t * t * float(obj.definition.x_tmax-obj.definition.x_t0) + 
                     obj.definition.x_t0; 
         };
 
@@ -41,12 +41,12 @@ struct in_quad_generator: easing_curve_generator {
 struct out_quad_generator: easing_curve_generator {
     easing_result operator()(easing_t const& obj) const override {
         // t /= d
-        // f(t) = t * (t -2 ) * (x_t0 - x_tmax) + x_t0 
+        // f(t) = -(x_tmax - x_t0) * t * (t - 2) + x_t0
 
         auto f = [&obj](auto t) {
             t /= obj.definition.duration;
             
-            return t * (t-2) * (obj.definition.x_t0 - obj.definition.x_tmax) + 
+            return  -float(obj.definition.x_tmax - obj.definition.x_t0) * t * (t-2) + 
                     obj.definition.x_t0; 
         };
 
@@ -63,15 +63,19 @@ struct in_out_quad_generator: easing_curve_generator {
         // f(t) = (x_t0 - x_tmax)/2 * (t*(t-2) -1) + x_t0
 
         auto f = [&obj](auto t) {
-            t /= (obj.definition.duration/2);
-            if ( t < 1) 
-                return t * t * (obj.definition.x_tmax-obj.definition.x_t0) + 
+
+            t /= float(obj.definition.duration)/2;
+
+            if ( t < 1){
+                return float(obj.definition.x_tmax-obj.definition.x_t0)/2 * t * t + 
                     obj.definition.x_t0; 
+            }
+
             t--;
-            return (obj.definition.x_t0 - obj.definition.x_tmax)/2 * (t * (t-2) - 1) +
+            return -float(obj.definition.x_tmax - obj.definition.x_t0)/2 * (t * (t-2) - 1) +
                     obj.definition.x_t0; 
         };
-
+        
         FILL_AND_RETURN_RESULTS;
     }
 };

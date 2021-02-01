@@ -80,6 +80,7 @@ using easing_list_t = std::vector<easing_input_data>;
 using easing_ptr_list_t = std::vector<easing_ptr_t>;
 using easing_result_data_t = std::vector<float>;
 
+
 struct easing_result {
     explicit easing_result(easing_result_data_t && data): results(std::move(data)) {}
 
