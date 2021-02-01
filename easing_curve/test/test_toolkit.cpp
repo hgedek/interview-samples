@@ -7,8 +7,6 @@ TEST_CASE("file exists") {
     const std::string file_name = toolkit::get_input_path() + "/empty.txt";
     decltype(file_name) non_exist = toolkit::get_input_path() + "/input.txt_";
 
-    std::cout << file_name << std::endl;
-
     REQUIRE(file_system::exists(file_name) == true);
     REQUIRE(file_system::exists(non_exist) == false); 
 }
@@ -53,6 +51,14 @@ TEST_CASE("str to easing type")
     REQUIRE(toolkit::str_to_easing_type("in_quad") == easing_type::in_quad);
     REQUIRE(toolkit::str_to_easing_type("out_quad") == easing_type::out_quad);
     REQUIRE(toolkit::str_to_easing_type("in_out_quad") == easing_type::in_out_quad);
+}
+
+TEST_CASE("easing type to str")
+{
+    REQUIRE(toolkit::easing_type_to_str(easing_type::linear) == "Linear");
+    REQUIRE(toolkit::easing_type_to_str(easing_type::in_quad) == "InQuad");
+    REQUIRE(toolkit::easing_type_to_str(easing_type::out_quad) == "OutQuad");
+    REQUIRE(toolkit::easing_type_to_str(easing_type::in_out_quad) == "InOutQuad");
 }
 
 TEST_CASE("type extracting from string")

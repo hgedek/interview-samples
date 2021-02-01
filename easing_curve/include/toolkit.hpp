@@ -1,6 +1,6 @@
 #pragma once
 
-#include "easing_input_data.hpp"
+#include "common.hpp"
 #include <algorithm>
 #include <unordered_map>
 #include <fstream>
@@ -62,15 +62,28 @@ struct toolkit {
     }
 
     static easing_type str_to_easing_type(std::string const& str) {
-        static std::unordered_map<std::string, easing_type> types = {
+        
+        static std::unordered_map<std::string, easing_type> hash_map = {
             {"linear", easing_type::linear},
             {"in_quad", easing_type::in_quad},
             {"out_quad", easing_type::out_quad},
             {"in_out_quad", easing_type::in_out_quad},
         };
         
-        auto itr = types.find(toolkit::to_lower(str));
-        return  itr == types.end() ? easing_type::none : itr->second;
+        auto itr = hash_map.find(toolkit::to_lower(str));
+        return  itr == hash_map.end() ? easing_type::none : itr->second;
+    }
+
+    static std::string easing_type_to_str(easing_type type) {
+
+        static std::unordered_map<easing_type, std::string> hash_map = {
+            {easing_type::linear, "Linear"},
+            {easing_type::in_quad, "InQuad"},
+            {easing_type::out_quad, "OutQuad"},
+            {easing_type::in_out_quad, "InOutQuad"},
+        };
+        
+        return hash_map[type];
     }
 };
 

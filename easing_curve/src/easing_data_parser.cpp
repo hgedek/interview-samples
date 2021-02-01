@@ -55,8 +55,12 @@ easing_t easing_data_parser::operator()(std::string const& definition_str) const
             result.definition.x_tmax = std::stoi(sm[VALUE]);
         // extract duration
         std::regex_search(duratin_group, sm, re);
-        if (!sm.empty())
+        if (!sm.empty()) {
             result.definition.duration = std::stoi(sm[VALUE]);
+            if (result.definition.duration == 0)
+                throw std::logic_error("duration = 0 is wrong");
+        }
+
     } catch(std::exception& e) {
         throw std::runtime_error(e.what());
     }

@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 struct easing_curve_generator {
-    virtual void operator()(easing_t const&) const = 0;
+    virtual easing_result operator()(easing_t const&) const = 0;
 };
 
 using generator_t = std::shared_ptr<easing_curve_generator>;

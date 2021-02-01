@@ -3,15 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <type_traits>
-
-enum class easing_type {
-    linear,
-    in_quad,
-    out_quad,
-    in_out_quad,
-    none
-};
-
+#include "toolkit.hpp"
 
 // At first I thought each curve has different data types so i decided to create so
 // but because of lack of examples i couldnt decide that and using easing_input_data i will parse all
@@ -60,15 +52,11 @@ struct easing_input_data final: easing_data {
 
     friend std::ostream& operator<<(std::ostream& out, easing_input_data const& input) 
     {
-        out << "easing_input_data:\n";
-        out << "definition:\n";
-        out << "x_t0: " << input.definition.x_t0 << '\n';
-        out << "x_tmax: " << input.definition.x_tmax<< '\n';
-        out << "duration: " << input.definition.duration << '\n';
-        out << "time_list:\n";
-
-        for (const auto& time : input.time_list)
-            out << time << '\n';
+        out << toolkit::easing_type_to_str(input.type) << ','
+            << "x_t0=" << input.definition.x_t0 << ','
+            << "x+jmax=" << input.definition.x_tmax << ','
+            << "duration=" << input.definition.duration
+            << '\n';
 
         return out;
     }
@@ -90,5 +78,19 @@ using easing_t = easing_input_data;
 using easing_ptr_t = std::unique_ptr<easing_input_data>;
 using easing_list_t = std::vector<easing_input_data>;
 using easing_ptr_list_t = std::vector<easing_ptr_t>;
+using easing_result_data_t = std::vector<float>;
+
+struct easing_result {
+    explicit easing_result(easing_result_data_t && data): results(std::move(data)) {}
+
+    friend std::ostream& operator<<(std::ostream& out, easing_result const& easing){
+        for (auto result : easing.results) 
+            out << result << '\n';
+        
+        return out;
+    }
+
+    easing_result_data_t results;
+};
 
 
