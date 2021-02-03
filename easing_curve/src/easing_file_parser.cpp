@@ -12,7 +12,7 @@ public:
 };
 
 easing_list_t easing_file_parser_impl::parse(std::string const& file_name) const {
-
+  
     std::ifstream in(file_name);
     std::string line;
 
